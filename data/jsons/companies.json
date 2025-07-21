@@ -1,0 +1,44 @@
+{
+  "companies": [
+    {
+      "id": "compA123",
+      "name": "TechNova",
+      "location": "Paris, France",
+      "industry": "Software",
+      "employees": [
+        {
+          "id": "emp001X",
+          "name": "Alice Dupont",
+          "position": "Software Engineer",
+          "email": "alice.dupont@technova.com"
+        },
+        {
+          "id": "emp002Y",
+          "name": "Marc Lemoine",
+          "position": "Product Manager",
+          "email": "marc.lemoine@technova.com"
+        }
+      ]
+    },
+    {
+      "id": "compB456",
+      "name": "GreenLogix",
+      "location": "Lyon, France",
+      "industry": "Logistics",
+      "employees": [
+        {
+          "id": "emp003Z",
+          "name": "Claire Martin",
+          "position": "Logistics Coordinator",
+          "email": "claire.martin@greenlogix.com"
+        },
+        {
+          "id": "emp004W",
+          "name": "Youssef Belkacem",
+          "position": "Operations Analyst",
+          "email": "youssef.belkacem@greenlogix.com"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,15 @@
+CREATE TABLE COMPANIES (
+    id VARCHAR(20) PRIMARY KEY,
+    name VARCHAR(100),
+    location VARCHAR(100),
+    industry VARCHAR(100)
+);
+
+CREATE TABLE EMPLOYEES (
+    id VARCHAR(20) PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    position VARCHAR(100),
+    email VARCHAR(150) UNIQUE,
+    company_id VARCHAR(20) NOT NULL,
+    FOREIGN KEY (company_id) REFERENCES COMPANIES(id)
+);
