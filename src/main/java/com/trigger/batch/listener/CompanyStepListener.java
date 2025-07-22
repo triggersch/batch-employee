@@ -3,6 +3,8 @@ package com.trigger.batch.listener;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.batch.core.ExitStatus;
 import org.springframework.batch.core.StepExecution;
 import org.springframework.batch.core.StepExecutionListener;
@@ -14,6 +16,8 @@ import com.trigger.batch.model.Employee;
 @Component
 public class CompanyStepListener implements StepExecutionListener, EmployeeStepListener {
 
+    private static Logger LOG = LoggerFactory.getLogger(CompanyStepListener.class);
+
      private final AtomicInteger employeeWriteCount = new AtomicInteger();
 
     @Override
@@ -23,7 +27,7 @@ public class CompanyStepListener implements StepExecutionListener, EmployeeStepL
 
     @Override
     public void beforeStep(@NonNull StepExecution stepExecution) {
-        System.out.println("[Step START] importStep");
+        LOG.info("[Step START] importStep");
     }
 
     @Override
@@ -33,9 +37,9 @@ public class CompanyStepListener implements StepExecutionListener, EmployeeStepL
         int employeesWritten = employeeWriteCount.get();
 
         
-        System.out.println("✅ Companies read: " + companiesRead);
-        System.out.println("✅ Companies written: " + companiesWritten);
-        System.out.println("✅ Employees written: " + employeesWritten);
+        LOG.info("✅ Companies read: {}", companiesRead);
+        LOG.info("✅ Companies written: {}", companiesWritten);
+        LOG.info("✅ Employees written: {}", employeesWritten);
 
         return stepExecution.getExitStatus();
     }

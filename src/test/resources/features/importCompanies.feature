@@ -23,3 +23,12 @@ Feature: Import Companies from JSON
       | id | name | location | industry |
     And the following employees should be registered:
       | id | name | position | email | companyId |
+
+  Scenario: Split large JSON file into smaller chunks
+    Given the JSON file "./src/test/resources/jsons/companies_100K.json"
+    And the split file max size is "10240" bytes
+    When I run the "importCompanies" job
+    Then the directory "./src/test/resources/jsons/split/" should contain multiple split JSON files
+    And each split file should be smaller than "10840" bytes
+    And exactly 200 companies should be present in the database
+    And exactly 396 employees should be registered in the database
