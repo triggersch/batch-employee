@@ -19,7 +19,7 @@ public class SplitFilePartitioner implements Partitioner {
     @Override
     public @NonNull Map<String, ExecutionContext> partition(int gridSize) {
         File dir = new File(splitDir);
-        File[] files = dir.listFiles((d, name) -> name.endsWith(".json"));
+        File[] files = dir.listFiles((d, name) -> name.endsWith(".dat"));
 
         Map<String, ExecutionContext> map = new HashMap<>();
         for (int i = 0; i < files.length; i++) {
