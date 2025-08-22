@@ -34,7 +34,7 @@ public class CleanupStepDefs {
         Path splitDir = Path.of(inputSplitDir);
         if (Files.exists(splitDir)) {
             Files.list(splitDir)
-                .filter(path -> path.getFileName().toString().startsWith("companies_") && path.toString().endsWith(".json"))
+                .filter(path -> path.getFileName().toString().startsWith("companies_") && path.toString().endsWith(".dat"))
                 .forEach(path -> {
                     try {
                         Files.deleteIfExists(path);

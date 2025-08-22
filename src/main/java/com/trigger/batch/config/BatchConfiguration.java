@@ -16,7 +16,7 @@ import org.springframework.transaction.PlatformTransactionManager;
 import com.trigger.batch.listener.CompanyStepListener;
 import com.trigger.batch.model.Company;
 import com.trigger.batch.partitioner.SplitFilePartitioner;
-import com.trigger.batch.step.CompaniesJsonReader;
+import com.trigger.batch.step.CobolFlatFileItemReader;
 import com.trigger.batch.step.CompanyItemProcessor;
 import com.trigger.batch.step.CompanyItemWriter;
 
@@ -24,22 +24,22 @@ import com.trigger.batch.step.CompanyItemWriter;
 public class BatchConfiguration {
 
     @Autowired
-    private Tasklet jsonFileSplitterTasklet;
+    private Tasklet cobolFlatFileSplitterTasklet;
 
     @Bean
     public Job importCompanies(JobRepository jobRepository,
-            Step splitJsonFileStep,
+            Step splitFlatFileStep,
             Step processSplitFilesStep) {
         return new JobBuilder("importCompanies", jobRepository)
-                .start(splitJsonFileStep)
+                .start(splitFlatFileStep)
                 .next(processSplitFilesStep)
                 .build();
     }
 
     @Bean
-    public Step splitJsonFileStep(JobRepository jobRepository, PlatformTransactionManager transactionManager) {
-        return new StepBuilder("splitJsonFileStep", jobRepository)
-                .tasklet(jsonFileSplitterTasklet, transactionManager)
+    public Step splitFlatFileStep(JobRepository jobRepository, PlatformTransactionManager transactionManager) {
+        return new StepBuilder("splitFlatFileStep", jobRepository)
+                .tasklet(cobolFlatFileSplitterTasklet, transactionManager)
                 .build();
     }
 
@@ -59,7 +59,7 @@ public class BatchConfiguration {
     @Bean
     public Step importStep(JobRepository jobRepository,
             PlatformTransactionManager transactionManager,
-            CompaniesJsonReader reader,
+            CobolFlatFileItemReader reader,
             CompanyItemProcessor processor,
             CompanyItemWriter writer,
             CompanyStepListener stepListener) {
