@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dataset>
+     <COMPANIES id="compA123"
+               name="TechNova"
+               location="Paris, France"
+               industry="Software"/>
+               
+    <COMPANIES id="compB456"
+               name="GreenLogix"
+               location="Lyon, France"
+               industry="Logistics"/>
+</dataset>

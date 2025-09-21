@@ -3,10 +3,13 @@ package com.trigger.batch.stepdefs;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Field;
+import java.net.URISyntaxException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.util.Comparator;
 
 import org.springframework.batch.core.step.tasklet.Tasklet;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +21,7 @@ import io.cucumber.java.Before;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -50,6 +54,34 @@ public class FlatFileStepDefs {
             }
         } else {
             Files.createDirectories(inputDir);
+        }
+    }
+
+    @Before
+    public void cleanOutputDir() throws IOException, URISyntaxException {
+        final var url = getClass().getResource("/output/actual");
+        Path outputDir;
+        if (url == null) {
+            final var rootUri = getClass().getResource("/").toURI();
+            outputDir = Paths.get(rootUri).resolve("output/actual");
+        } else {
+            outputDir = Paths.get(url.toURI());
+        }
+
+        if (Files.exists(outputDir)) {
+            // Supprime récursivement le contenu du dossier
+            Files.walk(outputDir)
+                    .sorted(Comparator.reverseOrder())
+                    .filter(path -> !path.equals(outputDir))
+                    .forEach(path -> {
+                        try {
+                            Files.deleteIfExists(path);
+                        } catch (IOException e) {
+                            throw new RuntimeException("Impossible de supprimer " + path, e);
+                        }
+                    });
+        } else {
+            Files.createDirectories(outputDir);
         }
     }
 
@@ -89,6 +121,24 @@ public class FlatFileStepDefs {
         for (File file : files) {
             assertTrue(file.length() < maxSize);
         }
+    }
+
+    @Then("genrerated file {string} must be identical to file {string}")
+    public void generatedFileMustBeIdenticalToFile(String actualPath, String expectedPath)
+            throws IOException, URISyntaxException {
+        final var expectedUrl = getClass().getResource(expectedPath);
+        if (expectedUrl == null) {
+            throw new IllegalArgumentException("Expected file not found : " + expectedPath);
+        }
+        String expectedContent = Files.readString(Paths.get(expectedUrl.toURI()), StandardCharsets.UTF_8);
+
+        final var actualUrl = getClass().getResource("/output/actual/" + actualPath);
+        if (actualUrl == null) {
+            throw new IllegalArgumentException("Actual file not found : " + actualPath);
+        }
+        String actualContent = Files.readString(Paths.get(actualUrl.toURI()), StandardCharsets.UTF_8);
+
+        assertEquals(expectedContent, actualContent);
     }
 
 }
